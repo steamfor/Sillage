@@ -14,7 +14,7 @@ export class AppComponent {
  byId(id?:string){return this.people().find(p=>p.id===id)}
  parents(p:Person){const ids=[p.father,p.mother,p.parent].filter((x):x is string=>!!x);return [...new Set(ids)].map(id=>this.byId(id)).filter((x):x is Person=>!!x)}
  children(p:Person){return this.people().filter(x=>[x.father,x.mother,x.parent].includes(p.id))}
- partners(p:Person){return (p.partners||[]).map(id=>this.byId(id)).filter((x):x is Person=>!!x)}
+ partners(p:Person){const ids=new Set([...(p.partners||[]),...this.people().filter(x=>(x.partners||[]).includes(p.id)).map(x=>x.id)]);return [...ids].map(id=>this.byId(id)).filter((x):x is Person=>!!x)}
  roots=computed(()=>{const all=this.filtered();return all.filter(p=>!this.parents(p).some(x=>all.includes(x)))});
  treeRows=computed(()=>{const matches=this.filtered();const result:{person:Person;depth:number;hasChildren:boolean}[]=[];const visited=new Set<string>();const walk=(p:Person,depth:number)=>{if(visited.has(p.id))return;visited.add(p.id);const children=this.children(p).filter(x=>matches.includes(x));result.push({person:p,depth,hasChildren:children.length>0});if(!this.collapsed().includes(p.id))children.forEach(x=>walk(x,Math.min(depth+1,10)))};this.roots().forEach(p=>walk(p,0));matches.filter(p=>!visited.has(p.id)).forEach(p=>walk(p,0));return result});
  open(id:string){if(this.selected()!==id){const old=this.selected();if(old)this.history.update(h=>[...h,old])}this.selected.set(id);this.editing=false}
