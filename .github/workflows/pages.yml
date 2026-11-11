@@ -18,6 +18,7 @@ jobs:
         with:
           node-version: '22'
       - run: npm install --no-audit --no-fund
+      - run: npm test
       - run: npm run build -- --base-href /Sillage/
       - run: cp dist/sillage/browser/index.html dist/sillage/browser/404.html
       - uses: actions/configure-pages@v5
