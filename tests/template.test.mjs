@@ -1,9 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createRequire} from 'node:module';
-const require=createRequire(import.meta.url);
-const {parseTemplate}=require('@angular/compiler');
+import {parseTemplate} from '@angular/compiler';
 const html=readFileSync(new URL('../src/app.component.html',import.meta.url),'utf8');
 test('Angular template parses without control-flow or HTML errors',()=>{
  const result=parseTemplate(html,'src/app.component.html');
